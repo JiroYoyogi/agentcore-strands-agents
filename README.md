@@ -208,3 +208,58 @@ curl -i http://127.0.0.1:8080/invocations \
 -H 'Accept: text/event-stream'
 ```
 
+## デプロイ
+
+### 実行するコマンド
+
+- agentcore validate
+- agentcore package
+- agentcore deploy --dry-run
+- agentcore deploy
+
+### agentcore validate
+
+- CLI設定や形式など検証
+
+### agentcore package
+
+- TypeScriptをビルドしコードと依存関係をデプロイ用ZIPにまとめる
+- 今回は `agentcore.json` の追加設定が必須だった（途中からCLI管理にしたためか）
+- `entrypoint` の指定が効かなかったため、`app/agent/main.ts` を作成・配置する対応
+
+```js
+  "runtimes": [
+    {
+      "name": "CodeChatAgent",
+      "build": "CodeZip",
+      "entrypoint": "main.ts",
+      "codeLocation": "./app/agent",
+      "runtimeVersion": "NODE_22",
+      "networkMode": "PUBLIC",
+      "protocol": "HTTP",
+      "envVars": [
+        {
+          "name": "AWS_REGION",
+          "value": "ap-northeast-1"
+        },
+        {
+          "name": "BEDROCK_MODEL_ID",
+          "value": "global.anthropic.claude-sonnet-4-6"
+        }
+      ]
+    }
+  ],
+```
+
+### agentcore deploy --dry-run
+
+デプロイの準備・事前チェック
+
+### agentcore deploy
+
+## 
+
+### agentcore status
+
+- プロジェクトのAWSリソースの状態を確認するコマンド
+- Runtimeの名前・ARN・デプロイ状態・READYなどの稼働状態を表示

@@ -11,5 +11,9 @@ cdk/node_modules/
 # Ephemeral Staging
 .cache/*
 
+# CodeZip deployment artifacts
+/*.zip
+/*/staging/
+
 # Exception: Commit the State
 !.cli/deployed-state.json

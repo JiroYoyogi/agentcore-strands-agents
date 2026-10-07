@@ -11,11 +11,21 @@
     {
       "name": "CodeChatAgent",
       "build": "CodeZip",
-      "entrypoint": "src/index.ts",
-      "codeLocation": "./app/agent/",
-      "runtimeVersion": "PYTHON_3_14",
+      "entrypoint": "main.js",
+      "codeLocation": "./app/agent",
+      "runtimeVersion": "NODE_22",
       "networkMode": "PUBLIC",
-      "protocol": "HTTP"
+      "protocol": "HTTP",
+      "envVars": [
+        {
+          "name": "AWS_REGION",
+          "value": "ap-northeast-1"
+        },
+        {
+          "name": "BEDROCK_MODEL_ID",
+          "value": "global.anthropic.claude-sonnet-4-6"
+        }
+      ]
     }
   ],
   "memories": [],

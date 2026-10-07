@@ -1,3 +1,17 @@
 {
-  "targets": {}
+  "targets": {
+    "default": {
+      "resources": {
+        "runtimes": {
+          "CodeChatAgent": {
+            "runtimeId": "CodeChat_CodeChatAgent-aB1xOL5uAQ",
+            "runtimeArn": "arn:aws:bedrock-agentcore:ap-northeast-1:280799964291:runtime/CodeChat_CodeChatAgent-aB1xOL5uAQ",
+            "roleArn": "arn:aws:iam::280799964291:role/AgentCore-CodeChat-defaul-ApplicationAgentCodeChatA-72U5q9egtB7j"
+          }
+        },
+        "stackName": "AgentCore-CodeChat-default",
+        "deployHash": "de4c8922c61c1f70"
+      }
+    }
+  }
 }
