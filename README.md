@@ -162,10 +162,26 @@ yield {
 
 ## ローカルサーバーで実行
 
+途中から `agentcore cli` を導入
+
 ### ローカルサーバー起動
+
+#### npm版
+
+- app/agentで下記を実行
+- `app/agent/.env`で環境変数設定
 
 ```
 npm run dev
+```
+
+#### agentcore cli版
+
+- ルートで下記を実行
+- `agentcore/.env.local`で環境変数設定
+
+```
+agentcore dev --logs
 ```
 
 ### リクエスト
