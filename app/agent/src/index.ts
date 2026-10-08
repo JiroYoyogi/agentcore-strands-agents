@@ -4,7 +4,10 @@ import { processChat as processChatGenerator } from "./chat_generator.js";
 
 // "json": 通常のasync関数で回答をまとめて返す。
 // "stream": 非同期ジェネレーターで回答を少しずつ返す。
-const responseMode: "json" | "stream" = "json";
+const responseMode = process.env.RESPONSE_MODE ?? "stream";
+if (responseMode !== "json" && responseMode !== "stream") {
+  throw new Error("RESPONSE_MODEはjsonまたはstreamを指定してください");
+}
 const handlers = {
   json: processChat,
   stream: processChatGenerator,

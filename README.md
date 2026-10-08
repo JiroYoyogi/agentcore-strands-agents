@@ -202,7 +202,8 @@ curl -i http://127.0.0.1:8080/invocations \
   -d '{"message":"先ほどの説明に短いコード例を追加してください"}'
 ```
 
-`"stream"`モードで実行したい場合は下記オプションを追加
+エージェントは初期値で`stream`モードです。curlには下記オプションを追加してください。
+JSON版で確認する場合はエージェントの環境変数を`RESPONSE_MODE=json`に設定します。
 
 ```
 -H 'Accept: text/event-stream'
@@ -216,6 +217,7 @@ curl -i http://127.0.0.1:8080/invocations \
 - agentcore package
 - agentcore deploy --dry-run
 - agentcore deploy
+- agentcore status
 
 ### agentcore validate
 
@@ -232,7 +234,7 @@ curl -i http://127.0.0.1:8080/invocations \
     {
       "name": "CodeChatAgent",
       "build": "CodeZip",
-      "entrypoint": "main.ts",
+      "entrypoint": "main.js",
       "codeLocation": "./app/agent",
       "runtimeVersion": "NODE_22",
       "networkMode": "PUBLIC",
@@ -257,9 +259,53 @@ curl -i http://127.0.0.1:8080/invocations \
 
 ### agentcore deploy
 
-## 
+デプロイ
 
 ### agentcore status
 
 - プロジェクトのAWSリソースの状態を確認するコマンド
 - Runtimeの名前・ARN・デプロイ状態・READYなどの稼働状態を表示
+
+
+## Express <=> AgentCore
+
+### セットアップ・起動
+
+```bash
+cd app/server
+npm ci
+cp .env.example .env
+```
+
+`.env`に`AWS_REGION`と、`agentcore status`で確認した`AGENT_RUNTIME_ARN`を設定
+
+```bash
+npm run dev
+```
+
+### 会話の扱いと動作確認
+
+- ブラウザが新規会話で`crypto.randomUUID()`を使って`sessionId`を生成・保持
+- 追加質問には同じIDを送り、新しい会話には新しいIDを使う想定
+- 履歴を管理するのはAWS上のエージェント。Runtimeのセッション終了・再起動で履歴は消える
+
+`POST /api/chat`の入力は`message`（1〜20,000文字）と`sessionId`（33〜256文字の英数字・ハイフン・アンダースコア）
+
+```bash
+curl http://127.0.0.1:3001/api/health
+curl -N http://127.0.0.1:3001/api/chat \
+  -H 'Content-Type: application/json' \
+  -d '{"message":"TypeScriptのunknownとanyの違いを短く説明してください","sessionId":"11111111-1111-4111-8111-111111111111"}'
+```
+
+同じIDで追加質問
+
+```bash
+curl -N http://127.0.0.1:3001/api/chat \
+  -H 'Content-Type: application/json' \
+  -d '{"message":"先ほどの説明にコード例を追加してください","sessionId":"11111111-1111-4111-8111-111111111111"}'
+```
+
+- Runtimeがストリーミング版なら`delta`・`done`・`error`のSSEイベントがそのまま返る
+- `done`にはエージェントが返した`sessionId`が入る。JSON版なら`answer`または`error`を含むJSONが返る
+
