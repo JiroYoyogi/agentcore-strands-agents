@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  color: #222;
+}
+
+main {
+  max-width: 800px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+section {
+  min-height: 160px;
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid #ccc;
+}
+
+article + article {
+  border-top: 1px solid #ccc;
+  padding-top: 12px;
+}
+
+.message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 8px 0;
+  padding: 8px;
+  font: inherit;
+}
+
+button {
+  padding: 6px 12px;
+  cursor: pointer;
+}
