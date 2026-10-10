@@ -27,6 +27,21 @@ article + article {
   overflow-wrap: anywhere;
 }
 
+.answer {
+  overflow-wrap: anywhere;
+}
+
+.answer code {
+  background: #f3f3f3;
+  font-family: monospace;
+}
+
+.answer pre {
+  padding: 12px;
+  background: #f3f3f3;
+  overflow-x: auto;
+}
+
 textarea {
   display: block;
   box-sizing: border-box;
