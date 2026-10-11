@@ -18,6 +18,12 @@ export async function streamChat(
   }
   if (!response.body) throw new Error("応答の本文がありません。");
 
+  /**
+   * SSEをfetchで扱う参考記事
+   * https://zenn.dev/cybozu_frontend/articles/try-server-sent-events
+   * https://zenn.dev/teramotodaiki/scraps/f016ed832d6f0d
+   */
+
   // getReader() そのストリームを読むための「読み取り役」を取得
   const reader = response.body.getReader();
   // Uint8Array => 文字列
