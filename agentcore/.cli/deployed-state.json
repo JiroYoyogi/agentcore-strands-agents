@@ -9,8 +9,22 @@
             "roleArn": "arn:aws:iam::280799964291:role/AgentCore-CodeChat-defaul-ApplicationAgentCodeChatA-72U5q9egtB7j"
           }
         },
+        "mcp": {
+          "gateways": {
+            "CodeChatSearch": {
+              "gatewayId": "codechat-codechatsearch-ceazcjpnfc",
+              "gatewayArn": "arn:aws:bedrock-agentcore:ap-northeast-1:280799964291:gateway/codechat-codechatsearch-ceazcjpnfc",
+              "gatewayUrl": "https://codechat-codechatsearch-ceazcjpnfc.gateway.bedrock-agentcore.ap-northeast-1.amazonaws.com",
+              "targets": {
+                "WebSearch": {
+                  "targetId": "DDK2ZGIJJ3"
+                }
+              }
+            }
+          }
+        },
         "stackName": "AgentCore-CodeChat-default",
-        "deployHash": "de4c8922c61c1f70"
+        "deployHash": "d8cf946c063c8735"
       }
     }
   }

@@ -309,3 +309,131 @@ curl -N http://127.0.0.1:3001/api/chat \
 - Runtimeがストリーミング版なら`delta`・`done`・`error`のSSEイベントがそのまま返る
 - `done`にはエージェントが返した`sessionId`が入る。JSON版なら`answer`または`error`を含むJSONが返る
 
+## URLでページ読み取り
+
+公式のツールを利用
+
+https://github.com/strands-agents/harness-sdk/blob/main/strands-ts/src/vended-tools/web-fetch/README.md
+
+## WEB検索
+
+### 動作イメージ
+
+```
+ブラウザ → ローカルExpress → AgentCore Runtime
+                              │
+                              │ IAM認証（SigV4）
+                              ▼
+                         AgentCore Gateway
+                              │
+                              ▼
+                         Web Search Tool
+```
+
+### 1. プロジェクトにGatewayを追加
+
+- IAM認証のGatewayを追加
+- AWS_IAMでSigV4認証
+
+```
+agentcore add gateway \
+  --name CodeChatSearch \
+  --authorizer-type AWS_IAM
+```
+
+### 2. GatewayにWeb Search Toolを追加
+
+- --name WebSearch：ターゲットの名前（任意）
+- --type connector：公式コネクターを利用
+- --connector web-search：Web検索を選択（公式のコネクターの名前）
+
+```
+agentcore add gateway-target \
+  --name WebSearch \
+  --type connector \
+  --connector web-search \
+  --gateway CodeChatSearch
+```
+
+### 3. デプロイ・検証・ect
+
+- 設定を検証
+
+```
+agentcore validate
+```
+
+- デプロイ内容を事前確認
+
+```
+agentcore deploy --dry-run
+```
+
+- AWSへデプロイ
+
+```
+agentcore deploy
+```
+
+- Gatewayなどのデプロイ状態を確認
+
+```
+agentcore status
+```
+
+### 4. Gateway関連の環境変数を追加
+
+- Gateway URLを確認
+
+```
+agentcore fetch access \
+  --name CodeChatSearch \
+  --type gateway \
+  --json
+```
+
+- Runtimeの環境変数を追加
+
+`agentcore/agentcore.json` の `CodeChatAgent` の `envVars` に次の項目を追加
+
+```
+{
+  "name": "AGENTCORE_GATEWAY_CODECHATSEARCH_URL",
+  "value": "<確認したGateway URL>"
+}
+```
+
+### 5. コード変更
+
+- Gatewayを使うためのパッケージをインストール
+
+`@modelcontextprotocol/sdk` ... GatewayへのMCP通信
+
+```
+cd app/agent
+
+npm install @modelcontextprotocol/sdk @aws/run-mcp-servers-with-aws-lambda
+
+
+cd ../..
+```
+
+- agent.tsを編集
+
+GatewayにIAM認証で接続（現在の `app/agent/src/agent.ts` の内容）
+
+### 6. エージェントを更新
+
+```
+agentcore validate
+agentcore deploy --dry-run
+agentcore deploy
+```
+
+### 7. 検証
+
+ExpressとReactを起動した上で下記
+
+```
+Node.jsの最新のLTSバージョンをWeb検索で確認してください。公式サイトを参照し、バージョン番号とサポート期間、参照元リンクを示してください。
+```
